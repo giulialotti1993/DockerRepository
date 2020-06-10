@@ -1,0 +1,51 @@
+version: '2'
+services: 
+ mqtt:
+  container_name: mqttdocker
+  image: giulialotti/eclipse-mosquitto-custom
+  ports: 
+   - '8883:8883'
+  volumes:
+   - mqttdata:/mosquitto/
+  restart: always
+ node-red:
+  container_name: nodereddocker
+  image: nodered/node-red
+  user: root
+  ports:
+   - '1880:1880'
+  restart: always
+  volumes:
+   - nodereddata:/data 
+ postgres:
+  container_name: postgresdocker
+  image: giulialotti/postgres-custom
+  volumes:
+   - postgresdata:/var/lib/postgresql/data
+  ports:
+   - '5432:5432'
+  restart: always
+  environment:
+   POSTGRES_USER: ${POSTGRES_USER}
+   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+ pgadmin:
+  container_name: pgadmindocker
+  image: dpage/pgadmin4
+  ports:
+   - '1080:80'
+  restart: always
+  volumes:
+   - pgadmindata:/var/lib/pgadmin
+  environment:
+   PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+   PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+ python:
+  container_name: pythondocker
+  image: giulialotti/python-custom
+  restart: always
+
+volumes:
+ pgadmindata:
+ postgresdata:
+ nodereddata:
+ mqttdata:
